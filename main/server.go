@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	pb "github.com/IT-IPOTEKA-25/kamchatka-backend" // Import the generated proto package
+	pb "github.com/IT-IPOTEKA-25/kamchatka-backend/generated/go" // Import the generated proto package
 )
 
 type server struct {
