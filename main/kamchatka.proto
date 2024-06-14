@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package main;
 
-option go_package = "github.com/annakoshkina/kamchatka/generated/go";
+option go_package = " github.com/IT-IPOTEKA-25/kamchatka-backend/generated/go";
 
 service KamchatkaService {
   rpc GetTerritoryCoordinates (GetTerritoryCoordinatesRequest) returns (GetTerritoryCoordinatesResponse);

@@ -1,4 +1,4 @@
-module kamchatka
+module kamchatka-backend
 
 go 1.22.4
 
