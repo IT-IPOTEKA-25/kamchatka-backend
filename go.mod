@@ -1,4 +1,4 @@
-module kamchatka-backend
+module github.com/IT-IPOTEKA-25/kamchatka-backend
 
 go 1.22.4
 
