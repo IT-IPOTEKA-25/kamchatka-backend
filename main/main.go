@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	chatgpt2 "github.com/IT-IPOTEKA-25/kamchatka-backend/chatgpt"
 	pb "github.com/IT-IPOTEKA-25/kamchatka-backend/generated/go"
 	"github.com/jackc/pgx/v4"
 	"github.com/joho/godotenv"
@@ -28,6 +29,7 @@ func main() {
 	dbPass := os.Getenv("DB_PASS")
 	dbIP := os.Getenv("DB_IP")
 	dbName := os.Getenv("DB_NAME")
+	aiKey := os.Getenv("AI_KEY")
 
 	// Connect to PostgreSQL database
 	conn, err := pgx.Connect(context.Background(), fmt.Sprintf("postgresql://%s:%s@%s/%s", dbUser, dbPass, dbIP, dbName))
@@ -45,7 +47,7 @@ func main() {
 	fmt.Println("Successfully connected to the database!")
 
 	// Create a new instance of the server, passing the database connection
-	srv := NewServer(conn)
+	srv := NewServer(conn, chatgpt2.NewChatGpt(aiKey))
 
 	// Set up a TCP listener
 	lis, err := net.Listen("tcp", port)

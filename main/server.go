@@ -3,17 +3,22 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"github.com/IT-IPOTEKA-25/kamchatka-backend/chatgpt"
 	pb "github.com/IT-IPOTEKA-25/kamchatka-backend/generated/go"
 	"github.com/jackc/pgx/v4"
 )
 
 type Server struct {
 	pb.UnimplementedKamchatkaServiceServer
-	conn *pgx.Conn
+	conn    *pgx.Conn
+	chatgpt *chatgpt.ChatGpt
 }
 
-func NewServer(conn *pgx.Conn) *Server {
-	return &Server{conn: conn}
+func NewServer(conn *pgx.Conn, chatgpt *chatgpt.ChatGpt) *Server {
+	return &Server{
+		conn:    conn,
+		chatgpt: chatgpt,
+	}
 }
 
 type Coordinates struct {
@@ -80,9 +85,17 @@ func (s *Server) GetRecreationalCapacity(ctx context.Context, req *pb.GetRecreat
 }
 
 func (s *Server) AddAlert(ctx context.Context, req *pb.AddAlertRequest) (*pb.StringResultResponse, error) {
-	_, err := s.conn.Exec(ctx, "insert into kamchatka.users_alerts(user_id, description, url) VALUES ($1, $2, $3)", req.UserId, req.Description, req.ImageUrl)
-	if err != nil {
-		return nil, err
+	//TODO: Temporary disabled
+	//isTrash, err := s.chatgpt.Prompt(req.ImageUrl)
+	//if err != nil {
+	//	return nil, err
+	//}
+	//if !isTrash{
+	//	return nil, errors.New("not found any trash on image")
+	//}
+	_, sqlErr := s.conn.Exec(ctx, "insert into kamchatka.users_alerts(user_id, description, url) VALUES ($1, $2, $3)", req.UserId, req.Description, req.ImageUrl)
+	if sqlErr != nil {
+		return nil, sqlErr
 	}
 	return &pb.StringResultResponse{
 		Result: "Successfully added alert",
