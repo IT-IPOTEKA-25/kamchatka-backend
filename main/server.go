@@ -21,7 +21,7 @@ type Coordinates struct {
 	Dot  []string
 }
 
-func (s *Server) GetTerritoryCoordinates(ctx context.Context, req *pb.GetRouteCoordinatesRequest) (*pb.GetRouteCoordinatesResponse, error) {
+func (s *Server) GetRouteCoordinates(ctx context.Context, req *pb.GetRouteCoordinatesRequest) (*pb.GetRouteCoordinatesResponse, error) {
 	var dbResult string
 	var coordinates []Coordinates
 	err := s.conn.QueryRow(ctx, "select coordinates from kamchatka.security_territories_coordinates where territory_id = $1", req.Id).Scan(&dbResult)
