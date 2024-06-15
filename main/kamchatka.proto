@@ -11,7 +11,7 @@ service KamchatkaService {
   rpc CreateUser (CreateUserRequest) returns (CreateUserResponse);
   rpc UpdateRecreationalCapacity (UpdateRecreationalCapacityRequest) returns (UpdateRecreationalCapacityResponse);
   rpc GetGroups (GetGroupsRequest) returns (GetGroupsResponse);
-  rpc GetTerritory (GetTerritoryRequest) returns (GetTerritoryResponse);
+  rpc GetGroupTerritories (GetGroupTerritoriesRequest) returns (GetGroupTerritoriesResponse);
 }
 
 message GetRouteCoordinatesRequest {
@@ -86,11 +86,15 @@ message Group{
   string name = 2;
 }
 
-message GetTerritoryRequest{
+message GetGroupTerritoriesRequest{
   int64 id = 1;
 }
 
-message GetTerritoryResponse{
+message GetGroupTerritoriesResponse{
+  repeated Territory territories = 1;
+}
+
+message Territory{
   int64 id = 1;
   string name = 2;
   int64 current_workload = 3;

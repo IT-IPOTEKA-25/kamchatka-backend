@@ -25,7 +25,7 @@ const (
 	KamchatkaService_CreateUser_FullMethodName                 = "/main.KamchatkaService/CreateUser"
 	KamchatkaService_UpdateRecreationalCapacity_FullMethodName = "/main.KamchatkaService/UpdateRecreationalCapacity"
 	KamchatkaService_GetGroups_FullMethodName                  = "/main.KamchatkaService/GetGroups"
-	KamchatkaService_GetTerritory_FullMethodName               = "/main.KamchatkaService/GetTerritory"
+	KamchatkaService_GetGroupTerritories_FullMethodName        = "/main.KamchatkaService/GetGroupTerritories"
 )
 
 // KamchatkaServiceClient is the client API for KamchatkaService service.
@@ -38,7 +38,7 @@ type KamchatkaServiceClient interface {
 	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error)
 	UpdateRecreationalCapacity(ctx context.Context, in *UpdateRecreationalCapacityRequest, opts ...grpc.CallOption) (*UpdateRecreationalCapacityResponse, error)
 	GetGroups(ctx context.Context, in *GetGroupsRequest, opts ...grpc.CallOption) (*GetGroupsResponse, error)
-	GetTerritory(ctx context.Context, in *GetTerritoryRequest, opts ...grpc.CallOption) (*GetTerritoryResponse, error)
+	GetGroupTerritories(ctx context.Context, in *GetGroupTerritoriesRequest, opts ...grpc.CallOption) (*GetGroupTerritoriesResponse, error)
 }
 
 type kamchatkaServiceClient struct {
@@ -109,10 +109,10 @@ func (c *kamchatkaServiceClient) GetGroups(ctx context.Context, in *GetGroupsReq
 	return out, nil
 }
 
-func (c *kamchatkaServiceClient) GetTerritory(ctx context.Context, in *GetTerritoryRequest, opts ...grpc.CallOption) (*GetTerritoryResponse, error) {
+func (c *kamchatkaServiceClient) GetGroupTerritories(ctx context.Context, in *GetGroupTerritoriesRequest, opts ...grpc.CallOption) (*GetGroupTerritoriesResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetTerritoryResponse)
-	err := c.cc.Invoke(ctx, KamchatkaService_GetTerritory_FullMethodName, in, out, cOpts...)
+	out := new(GetGroupTerritoriesResponse)
+	err := c.cc.Invoke(ctx, KamchatkaService_GetGroupTerritories_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -129,7 +129,7 @@ type KamchatkaServiceServer interface {
 	CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
 	UpdateRecreationalCapacity(context.Context, *UpdateRecreationalCapacityRequest) (*UpdateRecreationalCapacityResponse, error)
 	GetGroups(context.Context, *GetGroupsRequest) (*GetGroupsResponse, error)
-	GetTerritory(context.Context, *GetTerritoryRequest) (*GetTerritoryResponse, error)
+	GetGroupTerritories(context.Context, *GetGroupTerritoriesRequest) (*GetGroupTerritoriesResponse, error)
 	mustEmbedUnimplementedKamchatkaServiceServer()
 }
 
@@ -155,8 +155,8 @@ func (UnimplementedKamchatkaServiceServer) UpdateRecreationalCapacity(context.Co
 func (UnimplementedKamchatkaServiceServer) GetGroups(context.Context, *GetGroupsRequest) (*GetGroupsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetGroups not implemented")
 }
-func (UnimplementedKamchatkaServiceServer) GetTerritory(context.Context, *GetTerritoryRequest) (*GetTerritoryResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetTerritory not implemented")
+func (UnimplementedKamchatkaServiceServer) GetGroupTerritories(context.Context, *GetGroupTerritoriesRequest) (*GetGroupTerritoriesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetGroupTerritories not implemented")
 }
 func (UnimplementedKamchatkaServiceServer) mustEmbedUnimplementedKamchatkaServiceServer() {}
 
@@ -279,20 +279,20 @@ func _KamchatkaService_GetGroups_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
-func _KamchatkaService_GetTerritory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetTerritoryRequest)
+func _KamchatkaService_GetGroupTerritories_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetGroupTerritoriesRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(KamchatkaServiceServer).GetTerritory(ctx, in)
+		return srv.(KamchatkaServiceServer).GetGroupTerritories(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: KamchatkaService_GetTerritory_FullMethodName,
+		FullMethod: KamchatkaService_GetGroupTerritories_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(KamchatkaServiceServer).GetTerritory(ctx, req.(*GetTerritoryRequest))
+		return srv.(KamchatkaServiceServer).GetGroupTerritories(ctx, req.(*GetGroupTerritoriesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -329,8 +329,8 @@ var KamchatkaService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _KamchatkaService_GetGroups_Handler,
 		},
 		{
-			MethodName: "GetTerritory",
-			Handler:    _KamchatkaService_GetTerritory_Handler,
+			MethodName: "GetGroupTerritories",
+			Handler:    _KamchatkaService_GetGroupTerritories_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

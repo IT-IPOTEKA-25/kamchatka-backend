@@ -56,7 +56,15 @@ type RecreationalCapacity struct {
 
 func (s *Server) GetRecreationalCapacity(ctx context.Context, req *pb.GetRecreationalCapacityRequest) (*pb.GetRecreationalCapacityResponse, error) {
 	var resultCapacity RecreationalCapacity
-	err := s.conn.QueryRow(ctx, "select length_dtp, daytime_ts, distance_dgp, average_time_tdp, average_humans_in_group_gs, average_days_on_path_tp, result_capacity from kamchatka.recreational_capacity where territory_id = &1", req.Id).Scan(&resultCapacity)
+	err := s.conn.QueryRow(ctx, "select length_dtp, daytime_ts, distance_dgp, average_time_tdp, average_humans_in_group_gs, average_days_on_path_tp, result_capacity from kamchatka.recreational_capacity where territory_id = $1", req.Id).Scan(
+		&resultCapacity.LengthDtp,
+		&resultCapacity.DaytimeTs,
+		&resultCapacity.DistanceDgp,
+		&resultCapacity.AverageTimeTdp,
+		&resultCapacity.AverageHumansInGroupGs,
+		&resultCapacity.AverageDaysOnPathTp,
+		&resultCapacity.ResultCapacity,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -83,7 +91,7 @@ func (s *Server) AddAlert(ctx context.Context, req *pb.AddAlertRequest) (*pb.Str
 
 func (s *Server) CreateUser(ctx context.Context, req *pb.CreateUserRequest) (*pb.CreateUserResponse, error) {
 	var id int64
-	err := s.conn.QueryRow(ctx, "insert into kamchatka.users(name, phone) VALUES ($1, $2)", req.Name, req.Phone).Scan(&id)
+	err := s.conn.QueryRow(ctx, "INSERT INTO kamchatka.users(name, phone) VALUES ($1, $2) RETURNING id", req.Name, req.Phone).Scan(&id)
 	if err != nil {
 		return nil, err
 	}
@@ -110,10 +118,19 @@ type Groups struct {
 }
 
 func (s *Server) GetGroups(ctx context.Context, _ *pb.GetGroupsRequest) (*pb.GetGroupsResponse, error) {
-	var groups []Groups
-	err := s.conn.QueryRow(ctx, "select * from kamchatka.security_territories_groups").Scan(&groups)
+	rows, err := s.conn.Query(ctx, "select id, name from kamchatka.security_territories_groups")
 	if err != nil {
 		return nil, err
+	}
+	defer rows.Close()
+	var groups []Groups
+	for rows.Next() {
+		var group Groups
+		err = rows.Scan(&group.ID, &group.Name)
+		if err != nil {
+			return nil, err
+		}
+		groups = append(groups, group)
 	}
 	var pbGroups []*pb.Group
 	for _, group := range groups {
@@ -127,7 +144,7 @@ func (s *Server) GetGroups(ctx context.Context, _ *pb.GetGroupsRequest) (*pb.Get
 	}, nil
 }
 
-func (s *Server) GetTerritory(ctx context.Context, req *pb.GetTerritoryRequest) (*pb.GetTerritoryResponse, error) {
+func (s *Server) GetGroupTerritories(ctx context.Context, req *pb.GetGroupTerritoriesRequest) (*pb.GetGroupTerritoriesResponse, error) {
 	var id int64
 	var name string
 	var currentWorkload int64
@@ -137,10 +154,10 @@ func (s *Server) GetTerritory(ctx context.Context, req *pb.GetTerritoryRequest) 
 	if err != nil {
 		return nil, err
 	}
-	return &pb.GetTerritoryResponse{
-		Id:              id,
-		Name:            name,
-		CurrentWorkload: currentWorkload,
-		RouteOpen:       routeOpen,
+	return &pb.GetGroupTerritoriesResponse{
+		//Id:              id,
+		//Name:            name,
+		//CurrentWorkload: currentWorkload,
+		//RouteOpen:       routeOpen,
 	}, nil
 }
