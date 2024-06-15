@@ -144,20 +144,38 @@ func (s *Server) GetGroups(ctx context.Context, _ *pb.GetGroupsRequest) (*pb.Get
 	}, nil
 }
 
+type Territory struct {
+	Id              int64
+	Name            string
+	CurrentWorkload int64
+	RouteOpen       bool
+}
+
 func (s *Server) GetGroupTerritories(ctx context.Context, req *pb.GetGroupTerritoriesRequest) (*pb.GetGroupTerritoriesResponse, error) {
-	var id int64
-	var name string
-	var currentWorkload int64
-	var routeOpen bool
-	err := s.conn.QueryRow(ctx, "select id, name, current_workload, route_open from kamchatka.security_territories where group_id = $1 and has_data = true", req.Id).
-		Scan(&id, &name, &currentWorkload, &routeOpen)
+	rows, err := s.conn.Query(ctx, "select id, name, current_workload, route_open from kamchatka.security_territories where group_id = $1 and has_data = true", req.Id)
 	if err != nil {
 		return nil, err
 	}
+	defer rows.Close()
+	var territories []Territory
+	for rows.Next() {
+		var territory Territory
+		err = rows.Scan(&territory.Id, &territory.Name, &territory.CurrentWorkload, &territory.RouteOpen)
+		if err != nil {
+			return nil, err
+		}
+		territories = append(territories, territory)
+	}
+	var pbTerritories []*pb.Territory
+	for _, territory := range territories {
+		pbTerritories = append(pbTerritories, &pb.Territory{
+			Id:              territory.Id,
+			Name:            territory.Name,
+			CurrentWorkload: territory.CurrentWorkload,
+			RouteOpen:       territory.RouteOpen,
+		})
+	}
 	return &pb.GetGroupTerritoriesResponse{
-		//Id:              id,
-		//Name:            name,
-		//CurrentWorkload: currentWorkload,
-		//RouteOpen:       routeOpen,
+		Territories: pbTerritories,
 	}, nil
 }
