@@ -5,24 +5,26 @@ package main;
 option go_package = " github.com/IT-IPOTEKA-25/kamchatka-backend/generated/go";
 
 service KamchatkaService {
-  rpc GetTerritoryCoordinates (GetTerritoryCoordinatesRequest) returns (GetTerritoryCoordinatesResponse);
+  rpc GetRouteCoordinates (GetRouteCoordinatesRequest) returns (GetRouteCoordinatesResponse);
   rpc GetRecreationalCapacity (GetRecreationalCapacityRequest) returns (GetRecreationalCapacityResponse);
   rpc AddAlert (AddAlertRequest) returns (StringResultResponse);
   rpc CreateUser (CreateUserRequest) returns (CreateUserResponse);
   rpc UpdateRecreationalCapacity (UpdateRecreationalCapacityRequest) returns (UpdateRecreationalCapacityResponse);
+  rpc GetGroups (GetGroupsRequest) returns (GetGroupsResponse);
+  rpc GetTerritory (GetTerritoryRequest) returns (GetTerritoryResponse);
 }
 
-message GetTerritoryCoordinatesRequest {
+message GetRouteCoordinatesRequest {
   int64 id = 1;
 }
 
-message GetTerritoryCoordinatesResponse {
+message GetRouteCoordinatesResponse {
   repeated Coordinate coordinates = 1;
 }
 
 message Coordinate{
   string name = 1;
-  string dot = 2;
+  repeated string dot = 2;
 }
 
 message GetRecreationalCapacityRequest {
@@ -70,4 +72,27 @@ message UpdateRecreationalCapacityRequest {
 
 message UpdateRecreationalCapacityResponse {
   float recreational_result = 1;
+}
+
+message GetGroupsRequest{
+}
+
+message GetGroupsResponse{
+  repeated Group groups = 1;
+}
+
+message Group{
+  int64 id = 1;
+  string name = 2;
+}
+
+message GetTerritoryRequest{
+  int64 id = 1;
+}
+
+message GetTerritoryResponse{
+  int64 id = 1;
+  string name = 2;
+  int64 current_workload = 3;
+  bool route_open = 4;
 }

@@ -19,22 +19,26 @@ import (
 const _ = grpc.SupportPackageIsVersion8
 
 const (
-	KamchatkaService_GetTerritoryCoordinates_FullMethodName    = "/main.KamchatkaService/GetTerritoryCoordinates"
+	KamchatkaService_GetRouteCoordinates_FullMethodName        = "/main.KamchatkaService/GetRouteCoordinates"
 	KamchatkaService_GetRecreationalCapacity_FullMethodName    = "/main.KamchatkaService/GetRecreationalCapacity"
 	KamchatkaService_AddAlert_FullMethodName                   = "/main.KamchatkaService/AddAlert"
 	KamchatkaService_CreateUser_FullMethodName                 = "/main.KamchatkaService/CreateUser"
 	KamchatkaService_UpdateRecreationalCapacity_FullMethodName = "/main.KamchatkaService/UpdateRecreationalCapacity"
+	KamchatkaService_GetGroups_FullMethodName                  = "/main.KamchatkaService/GetGroups"
+	KamchatkaService_GetTerritory_FullMethodName               = "/main.KamchatkaService/GetTerritory"
 )
 
 // KamchatkaServiceClient is the client API for KamchatkaService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type KamchatkaServiceClient interface {
-	GetTerritoryCoordinates(ctx context.Context, in *GetTerritoryCoordinatesRequest, opts ...grpc.CallOption) (*GetTerritoryCoordinatesResponse, error)
+	GetRouteCoordinates(ctx context.Context, in *GetRouteCoordinatesRequest, opts ...grpc.CallOption) (*GetRouteCoordinatesResponse, error)
 	GetRecreationalCapacity(ctx context.Context, in *GetRecreationalCapacityRequest, opts ...grpc.CallOption) (*GetRecreationalCapacityResponse, error)
 	AddAlert(ctx context.Context, in *AddAlertRequest, opts ...grpc.CallOption) (*StringResultResponse, error)
 	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error)
 	UpdateRecreationalCapacity(ctx context.Context, in *UpdateRecreationalCapacityRequest, opts ...grpc.CallOption) (*UpdateRecreationalCapacityResponse, error)
+	GetGroups(ctx context.Context, in *GetGroupsRequest, opts ...grpc.CallOption) (*GetGroupsResponse, error)
+	GetTerritory(ctx context.Context, in *GetTerritoryRequest, opts ...grpc.CallOption) (*GetTerritoryResponse, error)
 }
 
 type kamchatkaServiceClient struct {
@@ -45,10 +49,10 @@ func NewKamchatkaServiceClient(cc grpc.ClientConnInterface) KamchatkaServiceClie
 	return &kamchatkaServiceClient{cc}
 }
 
-func (c *kamchatkaServiceClient) GetTerritoryCoordinates(ctx context.Context, in *GetTerritoryCoordinatesRequest, opts ...grpc.CallOption) (*GetTerritoryCoordinatesResponse, error) {
+func (c *kamchatkaServiceClient) GetRouteCoordinates(ctx context.Context, in *GetRouteCoordinatesRequest, opts ...grpc.CallOption) (*GetRouteCoordinatesResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetTerritoryCoordinatesResponse)
-	err := c.cc.Invoke(ctx, KamchatkaService_GetTerritoryCoordinates_FullMethodName, in, out, cOpts...)
+	out := new(GetRouteCoordinatesResponse)
+	err := c.cc.Invoke(ctx, KamchatkaService_GetRouteCoordinates_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -95,15 +99,37 @@ func (c *kamchatkaServiceClient) UpdateRecreationalCapacity(ctx context.Context,
 	return out, nil
 }
 
+func (c *kamchatkaServiceClient) GetGroups(ctx context.Context, in *GetGroupsRequest, opts ...grpc.CallOption) (*GetGroupsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetGroupsResponse)
+	err := c.cc.Invoke(ctx, KamchatkaService_GetGroups_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *kamchatkaServiceClient) GetTerritory(ctx context.Context, in *GetTerritoryRequest, opts ...grpc.CallOption) (*GetTerritoryResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetTerritoryResponse)
+	err := c.cc.Invoke(ctx, KamchatkaService_GetTerritory_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // KamchatkaServiceServer is the server API for KamchatkaService service.
 // All implementations must embed UnimplementedKamchatkaServiceServer
 // for forward compatibility
 type KamchatkaServiceServer interface {
-	GetTerritoryCoordinates(context.Context, *GetTerritoryCoordinatesRequest) (*GetTerritoryCoordinatesResponse, error)
+	GetRouteCoordinates(context.Context, *GetRouteCoordinatesRequest) (*GetRouteCoordinatesResponse, error)
 	GetRecreationalCapacity(context.Context, *GetRecreationalCapacityRequest) (*GetRecreationalCapacityResponse, error)
 	AddAlert(context.Context, *AddAlertRequest) (*StringResultResponse, error)
 	CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
 	UpdateRecreationalCapacity(context.Context, *UpdateRecreationalCapacityRequest) (*UpdateRecreationalCapacityResponse, error)
+	GetGroups(context.Context, *GetGroupsRequest) (*GetGroupsResponse, error)
+	GetTerritory(context.Context, *GetTerritoryRequest) (*GetTerritoryResponse, error)
 	mustEmbedUnimplementedKamchatkaServiceServer()
 }
 
@@ -111,8 +137,8 @@ type KamchatkaServiceServer interface {
 type UnimplementedKamchatkaServiceServer struct {
 }
 
-func (UnimplementedKamchatkaServiceServer) GetTerritoryCoordinates(context.Context, *GetTerritoryCoordinatesRequest) (*GetTerritoryCoordinatesResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetTerritoryCoordinates not implemented")
+func (UnimplementedKamchatkaServiceServer) GetRouteCoordinates(context.Context, *GetRouteCoordinatesRequest) (*GetRouteCoordinatesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetRouteCoordinates not implemented")
 }
 func (UnimplementedKamchatkaServiceServer) GetRecreationalCapacity(context.Context, *GetRecreationalCapacityRequest) (*GetRecreationalCapacityResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetRecreationalCapacity not implemented")
@@ -125,6 +151,12 @@ func (UnimplementedKamchatkaServiceServer) CreateUser(context.Context, *CreateUs
 }
 func (UnimplementedKamchatkaServiceServer) UpdateRecreationalCapacity(context.Context, *UpdateRecreationalCapacityRequest) (*UpdateRecreationalCapacityResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateRecreationalCapacity not implemented")
+}
+func (UnimplementedKamchatkaServiceServer) GetGroups(context.Context, *GetGroupsRequest) (*GetGroupsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetGroups not implemented")
+}
+func (UnimplementedKamchatkaServiceServer) GetTerritory(context.Context, *GetTerritoryRequest) (*GetTerritoryResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetTerritory not implemented")
 }
 func (UnimplementedKamchatkaServiceServer) mustEmbedUnimplementedKamchatkaServiceServer() {}
 
@@ -139,20 +171,20 @@ func RegisterKamchatkaServiceServer(s grpc.ServiceRegistrar, srv KamchatkaServic
 	s.RegisterService(&KamchatkaService_ServiceDesc, srv)
 }
 
-func _KamchatkaService_GetTerritoryCoordinates_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetTerritoryCoordinatesRequest)
+func _KamchatkaService_GetRouteCoordinates_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetRouteCoordinatesRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(KamchatkaServiceServer).GetTerritoryCoordinates(ctx, in)
+		return srv.(KamchatkaServiceServer).GetRouteCoordinates(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: KamchatkaService_GetTerritoryCoordinates_FullMethodName,
+		FullMethod: KamchatkaService_GetRouteCoordinates_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(KamchatkaServiceServer).GetTerritoryCoordinates(ctx, req.(*GetTerritoryCoordinatesRequest))
+		return srv.(KamchatkaServiceServer).GetRouteCoordinates(ctx, req.(*GetRouteCoordinatesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -229,6 +261,42 @@ func _KamchatkaService_UpdateRecreationalCapacity_Handler(srv interface{}, ctx c
 	return interceptor(ctx, in, info, handler)
 }
 
+func _KamchatkaService_GetGroups_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetGroupsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(KamchatkaServiceServer).GetGroups(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: KamchatkaService_GetGroups_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(KamchatkaServiceServer).GetGroups(ctx, req.(*GetGroupsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _KamchatkaService_GetTerritory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetTerritoryRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(KamchatkaServiceServer).GetTerritory(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: KamchatkaService_GetTerritory_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(KamchatkaServiceServer).GetTerritory(ctx, req.(*GetTerritoryRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // KamchatkaService_ServiceDesc is the grpc.ServiceDesc for KamchatkaService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -237,8 +305,8 @@ var KamchatkaService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*KamchatkaServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetTerritoryCoordinates",
-			Handler:    _KamchatkaService_GetTerritoryCoordinates_Handler,
+			MethodName: "GetRouteCoordinates",
+			Handler:    _KamchatkaService_GetRouteCoordinates_Handler,
 		},
 		{
 			MethodName: "GetRecreationalCapacity",
@@ -255,6 +323,14 @@ var KamchatkaService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateRecreationalCapacity",
 			Handler:    _KamchatkaService_UpdateRecreationalCapacity_Handler,
+		},
+		{
+			MethodName: "GetGroups",
+			Handler:    _KamchatkaService_GetGroups_Handler,
+		},
+		{
+			MethodName: "GetTerritory",
+			Handler:    _KamchatkaService_GetTerritory_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
