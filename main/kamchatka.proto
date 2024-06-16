@@ -24,7 +24,7 @@ message GetRouteCoordinatesResponse {
 
 message Coordinate{
   string name = 1;
-  repeated string dot = 2;
+  repeated float dot = 2;
 }
 
 message GetRecreationalCapacityRequest {

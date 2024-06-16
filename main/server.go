@@ -3,9 +3,13 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"github.com/IT-IPOTEKA-25/kamchatka-backend/chatgpt"
 	pb "github.com/IT-IPOTEKA-25/kamchatka-backend/generated/go"
 	"github.com/jackc/pgx/v4"
+	"math"
+	"strings"
+	"unicode"
 )
 
 type Server struct {
@@ -26,6 +30,24 @@ type Coordinates struct {
 	Dot  []string
 }
 
+func parseDMSString(dmsString string) (int, int, int, error) {
+	dmsString = strings.TrimLeftFunc(dmsString, func(r rune) bool {
+		return unicode.IsLetter(r)
+	})
+	var degrees, minutes, seconds int
+	_, err := fmt.Sscanf(dmsString, "%d°%d'%d\"", &degrees, &minutes, &seconds)
+	if err != nil {
+		return 0, 0, 0, err
+	}
+	return degrees, minutes, seconds, nil
+}
+
+func convertDMSToDD(data string) float32 {
+	degrees, minutes, seconds, _ := parseDMSString(data)
+	decimalDegrees := float64(degrees) + float64(minutes)/60.0 + float64(seconds)/3600.0
+	return float32(math.Round(decimalDegrees*10000) / 10000) // округление до 4 знаков после запятой
+}
+
 func (s *Server) GetRouteCoordinates(ctx context.Context, req *pb.GetRouteCoordinatesRequest) (*pb.GetRouteCoordinatesResponse, error) {
 	var dbResult string
 	var coordinates []Coordinates
@@ -41,7 +63,10 @@ func (s *Server) GetRouteCoordinates(ctx context.Context, req *pb.GetRouteCoordi
 	for _, coordinate := range coordinates {
 		pbCoordinates = append(pbCoordinates, &pb.Coordinate{
 			Name: coordinate.Name,
-			Dot:  coordinate.Dot,
+			Dot: []float32{
+				convertDMSToDD(coordinate.Dot[0]),
+				convertDMSToDD(coordinate.Dot[1]),
+			},
 		})
 	}
 	return &pb.GetRouteCoordinatesResponse{
