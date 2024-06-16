@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package main;
 
-option go_package = " github.com/IT-IPOTEKA-25/kamchatka-backend/generated/go";
+option go_package = "github.com/IT-IPOTEKA-25/kamchatka-backend/generated/go";
 
 service KamchatkaService {
   rpc GetRouteCoordinates (GetRouteCoordinatesRequest) returns (GetRouteCoordinatesResponse);
@@ -12,6 +12,7 @@ service KamchatkaService {
   rpc UpdateRecreationalCapacity (UpdateRecreationalCapacityRequest) returns (UpdateRecreationalCapacityResponse);
   rpc GetGroups (GetGroupsRequest) returns (GetGroupsResponse);
   rpc GetGroupTerritories (GetGroupTerritoriesRequest) returns (GetGroupTerritoriesResponse);
+  rpc GetSatelliteAlerts (GetSatelliteAlertsRequest) returns (GetSatelliteAlertsResponse);
 }
 
 message GetRouteCoordinatesRequest {
@@ -99,4 +100,18 @@ message Territory{
   string name = 2;
   int64 current_workload = 3;
   bool route_open = 4;
+}
+
+message GetSatelliteAlertsRequest{
+}
+
+message GetSatelliteAlertsResponse{
+  repeated SatelliteAlert satelliteAlerts = 1;
+}
+
+message SatelliteAlert{
+  string image = 1;
+  string category = 2;
+  string time = 3;
+  string coordinates = 4;
 }

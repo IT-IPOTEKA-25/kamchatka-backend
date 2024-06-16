@@ -26,6 +26,7 @@ const (
 	KamchatkaService_UpdateRecreationalCapacity_FullMethodName = "/main.KamchatkaService/UpdateRecreationalCapacity"
 	KamchatkaService_GetGroups_FullMethodName                  = "/main.KamchatkaService/GetGroups"
 	KamchatkaService_GetGroupTerritories_FullMethodName        = "/main.KamchatkaService/GetGroupTerritories"
+	KamchatkaService_GetSatelliteAlerts_FullMethodName         = "/main.KamchatkaService/GetSatelliteAlerts"
 )
 
 // KamchatkaServiceClient is the client API for KamchatkaService service.
@@ -39,6 +40,7 @@ type KamchatkaServiceClient interface {
 	UpdateRecreationalCapacity(ctx context.Context, in *UpdateRecreationalCapacityRequest, opts ...grpc.CallOption) (*UpdateRecreationalCapacityResponse, error)
 	GetGroups(ctx context.Context, in *GetGroupsRequest, opts ...grpc.CallOption) (*GetGroupsResponse, error)
 	GetGroupTerritories(ctx context.Context, in *GetGroupTerritoriesRequest, opts ...grpc.CallOption) (*GetGroupTerritoriesResponse, error)
+	GetSatelliteAlerts(ctx context.Context, in *GetSatelliteAlertsRequest, opts ...grpc.CallOption) (*GetSatelliteAlertsResponse, error)
 }
 
 type kamchatkaServiceClient struct {
@@ -119,6 +121,16 @@ func (c *kamchatkaServiceClient) GetGroupTerritories(ctx context.Context, in *Ge
 	return out, nil
 }
 
+func (c *kamchatkaServiceClient) GetSatelliteAlerts(ctx context.Context, in *GetSatelliteAlertsRequest, opts ...grpc.CallOption) (*GetSatelliteAlertsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetSatelliteAlertsResponse)
+	err := c.cc.Invoke(ctx, KamchatkaService_GetSatelliteAlerts_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // KamchatkaServiceServer is the server API for KamchatkaService service.
 // All implementations must embed UnimplementedKamchatkaServiceServer
 // for forward compatibility
@@ -130,6 +142,7 @@ type KamchatkaServiceServer interface {
 	UpdateRecreationalCapacity(context.Context, *UpdateRecreationalCapacityRequest) (*UpdateRecreationalCapacityResponse, error)
 	GetGroups(context.Context, *GetGroupsRequest) (*GetGroupsResponse, error)
 	GetGroupTerritories(context.Context, *GetGroupTerritoriesRequest) (*GetGroupTerritoriesResponse, error)
+	GetSatelliteAlerts(context.Context, *GetSatelliteAlertsRequest) (*GetSatelliteAlertsResponse, error)
 	mustEmbedUnimplementedKamchatkaServiceServer()
 }
 
@@ -157,6 +170,9 @@ func (UnimplementedKamchatkaServiceServer) GetGroups(context.Context, *GetGroups
 }
 func (UnimplementedKamchatkaServiceServer) GetGroupTerritories(context.Context, *GetGroupTerritoriesRequest) (*GetGroupTerritoriesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetGroupTerritories not implemented")
+}
+func (UnimplementedKamchatkaServiceServer) GetSatelliteAlerts(context.Context, *GetSatelliteAlertsRequest) (*GetSatelliteAlertsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSatelliteAlerts not implemented")
 }
 func (UnimplementedKamchatkaServiceServer) mustEmbedUnimplementedKamchatkaServiceServer() {}
 
@@ -297,6 +313,24 @@ func _KamchatkaService_GetGroupTerritories_Handler(srv interface{}, ctx context.
 	return interceptor(ctx, in, info, handler)
 }
 
+func _KamchatkaService_GetSatelliteAlerts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetSatelliteAlertsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(KamchatkaServiceServer).GetSatelliteAlerts(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: KamchatkaService_GetSatelliteAlerts_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(KamchatkaServiceServer).GetSatelliteAlerts(ctx, req.(*GetSatelliteAlertsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // KamchatkaService_ServiceDesc is the grpc.ServiceDesc for KamchatkaService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -331,6 +365,10 @@ var KamchatkaService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetGroupTerritories",
 			Handler:    _KamchatkaService_GetGroupTerritories_Handler,
+		},
+		{
+			MethodName: "GetSatelliteAlerts",
+			Handler:    _KamchatkaService_GetSatelliteAlerts_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

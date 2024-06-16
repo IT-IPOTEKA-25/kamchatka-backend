@@ -7,6 +7,7 @@ import (
 	"github.com/IT-IPOTEKA-25/kamchatka-backend/chatgpt"
 	pb "github.com/IT-IPOTEKA-25/kamchatka-backend/generated/go"
 	"github.com/jackc/pgx/v4"
+	"google.golang.org/protobuf/types/known/timestamppb"
 	"math"
 	"strings"
 	"unicode"
@@ -215,5 +216,41 @@ func (s *Server) GetGroupTerritories(ctx context.Context, req *pb.GetGroupTerrit
 	}
 	return &pb.GetGroupTerritoriesResponse{
 		Territories: pbTerritories,
+	}, nil
+}
+
+type SatelliteAlerts struct {
+	Image       string
+	Category    string
+	Time        timestamppb.Timestamp
+	Coordinates string
+}
+
+func (s *Server) GetSatelliteAlerts(ctx context.Context, _ *pb.GetSatelliteAlertsRequest) (*pb.GetSatelliteAlertsResponse, error) {
+	rows, err := s.conn.Query(ctx, "select image, category, time, coordinates from kamchatka.satellite_alerts where handled is not true")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var alerts []*SatelliteAlerts
+	for rows.Next() {
+		var alert SatelliteAlerts
+		err = rows.Scan(&alert.Image, &alert.Category, &alert.Time, &alert.Coordinates)
+		if err != nil {
+			return nil, err
+		}
+		alerts = append(alerts, &alert)
+	}
+	var satelliteAlerts []*pb.SatelliteAlert
+	for _, alert := range alerts {
+		satelliteAlerts = append(satelliteAlerts, &pb.SatelliteAlert{
+			Image:       alert.Image,
+			Category:    alert.Category,
+			Time:        alert.Time.String(),
+			Coordinates: alert.Coordinates,
+		})
+	}
+	return &pb.GetSatelliteAlertsResponse{
+		SatelliteAlerts: satelliteAlerts,
 	}, nil
 }

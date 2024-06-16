@@ -47,7 +47,7 @@ func main() {
 	fmt.Println("Successfully connected to the database!")
 
 	// Create a new instance of the server, passing the database connection
-	srv := NewServer(conn, chatgpt2.NewChatGpt(aiKey))
+	server := NewServer(conn, chatgpt2.NewChatGpt(aiKey))
 
 	// Set up a TCP listener
 	lis, err := net.Listen("tcp", port)
@@ -57,7 +57,7 @@ func main() {
 
 	// Create a new gRPC server instance
 	s := grpc.NewServer()
-	pb.RegisterKamchatkaServiceServer(s, srv)
+	pb.RegisterKamchatkaServiceServer(s, server)
 
 	// Start the gRPC server
 	log.Printf("server listening at %v", lis.Addr())
